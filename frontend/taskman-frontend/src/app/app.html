@@ -1,0 +1,23 @@
+<div class="app-container">
+  <header class="app-header" *ngIf="authService.isAuthenticated()">
+    <div class="header-content">
+      <h1>TaskMan</h1>
+      <nav class="nav-menu">
+        <a routerLink="/dashboard" routerLinkActive="active">Dashboard</a>
+        <a routerLink="/tasks" routerLinkActive="active">Tasks</a>
+        <a routerLink="/invite" routerLinkActive="active" *ngIf="authService.isLead()">Invite</a>
+      </nav>
+      <div class="user-menu">
+        <span class="user-info">
+          {{ authService.getCurrentUserValue()?.firstName }} {{ authService.getCurrentUserValue()?.lastName }}
+          ({{ authService.getCurrentUserValue()?.role }})
+        </span>
+        <button class="logout-btn" (click)="logout()">Logout</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="app-main">
+    <router-outlet></router-outlet>
+  </main>
+</div>

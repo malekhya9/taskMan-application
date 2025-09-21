@@ -1,0 +1,100 @@
+<div class="dashboard-container">
+  <div class="dashboard-header">
+    <h1>Dashboard</h1>
+    <div class="dashboard-actions" *ngIf="authService.isLead()">
+      <button class="btn btn-secondary" (click)="exportTasks()">Export Tasks</button>
+    </div>
+  </div>
+
+  <!-- Statistics Cards -->
+  <div class="stats-grid">
+    <div class="stat-card">
+      <h3>Total Tasks</h3>
+      <div class="stat-number">{{ totalTasks }}</div>
+    </div>
+    <div class="stat-card">
+      <h3>Completed</h3>
+      <div class="stat-number">{{ completedTasks }}</div>
+    </div>
+    <div class="stat-card">
+      <h3>In Progress</h3>
+      <div class="stat-number">{{ tasksInProgress }}</div>
+    </div>
+    <div class="stat-card">
+      <h3>Overdue</h3>
+      <div class="stat-number">{{ overdueTasks }}</div>
+    </div>
+  </div>
+
+  <!-- Filters -->
+  <div class="filters-section">
+    <h3>Filters</h3>
+    <div class="filters-grid">
+      <div class="filter-group">
+        <label for="statusFilter">Status</label>
+        <select id="statusFilter" [(ngModel)]="filters.status" (change)="onFilterChange()">
+          <option value="">All Statuses</option>
+          <option value="backlogged">Backlogged</option>
+          <option value="defined">Defined</option>
+          <option value="in-progress">In Progress</option>
+          <option value="review">Review</option>
+          <option value="completed">Completed</option>
+        </select>
+      </div>
+      
+      <div class="filter-group">
+        <label for="projectFilter">Project</label>
+        <input
+          type="text"
+          id="projectFilter"
+          [(ngModel)]="filters.projectTag"
+          (input)="onFilterChange()"
+          placeholder="Filter by project tag"
+        />
+      </div>
+      
+      <div class="filter-group">
+        <label for="assigneeFilter">Assignee</label>
+        <select id="assigneeFilter" [(ngModel)]="filters.assigneeId" (change)="onFilterChange()">
+          <option value="">All Assignees</option>
+          <option *ngFor="let user of users" [value]="user.id">
+            {{ user.firstName }} {{ user.lastName }}
+          </option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <!-- Recent Tasks -->
+  <div class="recent-tasks">
+    <h3>Recent Tasks</h3>
+    <div class="tasks-list" *ngIf="!isLoading">
+      <div class="task-item" *ngFor="let task of tasks.slice(0, 10)">
+        <div class="task-info">
+          <h4>
+            <a [routerLink]="['/tasks', task.id]">{{ task.title }}</a>
+          </h4>
+          <p class="task-description">{{ task.description }}</p>
+          <div class="task-meta">
+            <span class="task-status">{{ task.status }}</span>
+            <span class="task-project" *ngIf="task.projectTag">{{ task.projectTag }}</span>
+            <span class="task-due-date" [class]="getDeadlineColorClass(task.deadlineColor)" *ngIf="task.dueDate">
+              Due: {{ task.dueDate | date:'short' }}
+            </span>
+          </div>
+        </div>
+        <div class="task-assignees" *ngIf="task.assignees && task.assignees.length > 0">
+          <span class="assignee-count">{{ task.assignees.length }} assignee(s)</span>
+        </div>
+      </div>
+    </div>
+    
+    <div class="loading" *ngIf="isLoading">
+      <p>Loading tasks...</p>
+    </div>
+    
+    <div class="no-tasks" *ngIf="!isLoading && tasks.length === 0">
+      <p>No tasks found.</p>
+    </div>
+  </div>
+</div>

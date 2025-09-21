@@ -1,0 +1,50 @@
+<div class="login-container">
+  <div class="login-card">
+    <h2>Login to TaskMan</h2>
+    
+    <form (ngSubmit)="onSubmit()" #loginForm="ngForm">
+      <div class="form-group">
+        <label for="email">Email</label>
+        <input
+          type="email"
+          id="email"
+          name="email"
+          [(ngModel)]="loginData.email"
+          required
+          email
+          class="form-control"
+          placeholder="Enter your email"
+        />
+      </div>
+
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input
+          type="password"
+          id="password"
+          name="password"
+          [(ngModel)]="loginData.password"
+          required
+          class="form-control"
+          placeholder="Enter your password"
+        />
+      </div>
+
+      <div class="error-message" *ngIf="errorMessage">
+        {{ errorMessage }}
+      </div>
+
+      <button
+        type="submit"
+        class="btn btn-primary"
+        [disabled]="isLoading || !loginForm.form.valid"
+      >
+        {{ isLoading ? 'Logging in...' : 'Login' }}
+      </button>
+    </form>
+
+    <div class="login-footer">
+      <p>Don't have an account? <a routerLink="/register">Register here</a></p>
+    </div>
+  </div>
+</div>

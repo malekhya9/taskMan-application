@@ -1,0 +1,129 @@
+<div class="task-list-container">
+  <div class="task-list-header">
+    <h1>Tasks</h1>
+    <div class="header-actions" *ngIf="authService.isLead()">
+      <button class="btn btn-primary" routerLink="/tasks/new">Create Task</button>
+    </div>
+  </div>
+
+  <!-- Filters -->
+  <div class="filters-section">
+    <div class="filters-grid">
+      <div class="filter-group">
+        <label for="statusFilter">Status</label>
+        <select id="statusFilter" [(ngModel)]="filters.status" (change)="onFilterChange()">
+          <option value="">All Statuses</option>
+          <option *ngFor="let status of taskStatuses" [value]="status.value">
+            {{ status.label }}
+          </option>
+        </select>
+      </div>
+      
+      <div class="filter-group">
+        <label for="projectFilter">Project</label>
+        <input
+          type="text"
+          id="projectFilter"
+          [(ngModel)]="filters.projectTag"
+          (input)="onFilterChange()"
+          placeholder="Filter by project tag"
+        />
+      </div>
+      
+      <div class="filter-group">
+        <label for="assigneeFilter">Assignee</label>
+        <select id="assigneeFilter" [(ngModel)]="filters.assigneeId" (change)="onFilterChange()">
+          <option value="">All Assignees</option>
+          <option *ngFor="let user of users" [value]="user.id">
+            {{ user.firstName }} {{ user.lastName }}
+          </option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tasks Table -->
+  <div class="tasks-table-container">
+    <table class="tasks-table" *ngIf="!isLoading">
+      <thead>
+        <tr>
+          <th>Title</th>
+          <th>Status</th>
+          <th>Project</th>
+          <th>Due Date</th>
+          <th>Assignees</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let task of getPaginatedTasks()" class="task-row">
+          <td class="task-title">
+            <a [routerLink]="['/tasks', task.id]">{{ task.title }}</a>
+            <div class="task-description">{{ task.description }}</div>
+          </td>
+          <td class="task-status">
+            <span class="status-badge" [style.background-color]="getStatusColor(task.status)">
+              {{ getStatusLabel(task.status) }}
+            </span>
+          </td>
+          <td class="task-project">{{ task.projectTag || '-' }}</td>
+          <td class="task-due-date">
+            <span *ngIf="task.dueDate" [class]="getDeadlineColorClass(task.deadlineColor)">
+              {{ task.dueDate | date:'short' }}
+            </span>
+            <span *ngIf="!task.dueDate">-</span>
+          </td>
+          <td class="task-assignees">
+            <span *ngIf="task.assignees && task.assignees.length > 0">
+              {{ task.assignees.length }} assignee(s)
+            </span>
+            <span *ngIf="!task.assignees || task.assignees.length === 0">-</span>
+          </td>
+          <td class="task-actions">
+            <select 
+              [value]="task.status" 
+              (change)="updateTaskStatus(task, $event.target.value)"
+              [disabled]="!canUpdateStatus(task, $event.target.value)"
+              class="status-select"
+            >
+              <option *ngFor="let status of taskStatuses" [value]="status.value">
+                {{ status.label }}
+              </option>
+            </select>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    
+    <div class="loading" *ngIf="isLoading">
+      <p>Loading tasks...</p>
+    </div>
+    
+    <div class="no-tasks" *ngIf="!isLoading && tasks.length === 0">
+      <p>No tasks found.</p>
+    </div>
+  </div>
+
+  <!-- Pagination -->
+  <div class="pagination" *ngIf="getTotalPages() > 1">
+    <button 
+      class="btn btn-secondary" 
+      [disabled]="currentPage === 1"
+      (click)="onPageChange(currentPage - 1)"
+    >
+      Previous
+    </button>
+    
+    <span class="page-info">
+      Page {{ currentPage }} of {{ getTotalPages() }}
+    </span>
+    
+    <button 
+      class="btn btn-secondary" 
+      [disabled]="currentPage === getTotalPages()"
+      (click)="onPageChange(currentPage + 1)"
+    >
+      Next
+    </button>
+  </div>
+</div>
