@@ -117,7 +117,6 @@ export class TaskListComponent implements OnInit {
   onPageChange(page: number): void {
     this.currentPage = page;
   }
-}
 
   getStatusColor(status: string): string {
     const statusObj = this.taskStatuses.find(s => s.value === status);

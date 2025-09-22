@@ -6,6 +6,6 @@ import { Component } from '@angular/core';
   templateUrl: './invite.html',
   styleUrl: './invite.scss'
 })
-export class Invite {
+export class InviteComponent {
 
 }

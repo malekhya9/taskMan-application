@@ -82,8 +82,7 @@
           <td class="task-actions">
             <select 
               [value]="task.status" 
-              (change)="updateTaskStatus(task, $event.target.value)"
-              [disabled]="!canUpdateStatus(task, $event.target.value)"
+              (change)="updateTaskStatus(task, $any($event.target).value)"
               class="status-select"
             >
               <option *ngFor="let status of taskStatuses" [value]="status.value">
