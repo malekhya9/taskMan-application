@@ -1,249 +1,234 @@
-# TaskMan - Task Management Web Application
+# TaskMan Application
 
-A comprehensive task management web application built with Angular frontend and Node.js/Express backend, designed according to the provided PRD specifications.
+A comprehensive task management application built with Angular frontend and .NET backend, featuring role-based access control, file attachments, comments, and CSV export functionality.
 
 ## 🚀 Features
 
-### Core Functionality
-- **User Authentication**: JWT-based authentication with email verification
-- **Role-Based Access Control**: Lead and Member roles with different permissions
-- **Task Management**: Complete task lifecycle from backlogged to completed
-- **Status Transitions**: Enforced business rules for task status changes
-- **Deadline Highlighting**: Color-coded deadlines (green/yellow/red)
-- **File Attachments**: Support for task attachments (up to 10MB, 3 files per task)
-- **Comments System**: Task commenting functionality
-- **CSV Export**: Export tasks and users data (Lead only)
-- **Organization Hierarchy**: Multi-level organization support
-
-### Task Lifecycle
-- **States**: `backlogged` → `defined` → `in-progress` → `review` → `completed`
-- **Lead Permissions**: Can move between any states, only leads can complete tasks
-- **Member Permissions**: Can only move `defined` → `in-progress` and `in-progress` → `review`
-- **Soft Delete**: Completed tasks are archived, not permanently deleted
-
-### User Roles
-- **Lead/Admin**: 
-  - Create and assign tasks
-  - Invite members
-  - Create other leads
-  - Export data
-  - Full task management permissions
-- **Member**: 
-  - Limited task status changes
-  - Add comments
-  - View assigned tasks
+- **User Authentication & Authorization**: JWT-based authentication with role-based access control (Lead/Member)
+- **Task Management**: Full CRUD operations with status transitions and deadline tracking
+- **File Attachments**: Upload and manage task attachments with file size limits
+- **Comments System**: Add comments to tasks with user attribution
+- **CSV Export**: Export tasks to CSV format for reporting
+- **Organization Hierarchy**: Support for organizational structure with leads and members
+- **Real-time Updates**: Live task status updates and notifications
+- **Responsive Design**: Mobile-friendly interface with modern UI/UX
 
 ## 🏗️ Architecture
 
-### Backend (Node.js/Express)
-- **Framework**: Express.js with TypeScript support
-- **Database**: MySQL with comprehensive schema
-- **Authentication**: JWT tokens with email verification
-- **File Upload**: Multer for handling attachments
-- **Email Service**: Nodemailer for OTP and invitations
-- **Security**: Helmet, CORS, rate limiting
-- **Export**: CSV generation with fast-csv
-
 ### Frontend (Angular)
-- **Framework**: Angular 18+ with standalone components
-- **Styling**: Custom SCSS with responsive design
+- **Framework**: Angular 17+ with standalone components
+- **Styling**: SCSS with modern CSS features
 - **State Management**: Services with RxJS observables
-- **Routing**: Angular Router with guards
-- **HTTP Client**: Interceptors for authentication
-- **UI Components**: Custom components with Material Design principles
+- **Authentication**: JWT token-based authentication
+- **HTTP Client**: Angular HttpClient with interceptors
+
+### Backend (.NET)
+- **Framework**: .NET 8 Web API
+- **Database**: Entity Framework Core with SQLite (dev) / SQL Server (prod)
+- **Authentication**: JWT Bearer authentication
+- **Security**: Rate limiting, CORS, input validation
+- **Documentation**: Swagger/OpenAPI integration
 
 ## 📁 Project Structure
 
 ```
-taskMan/
-├── backend/
-│   ├── src/
-│   │   ├── controllers/     # Route handlers
-│   │   ├── models/         # Data models
-│   │   ├── routes/         # API routes
-│   │   ├── middleware/     # Auth & validation
-│   │   ├── utils/          # Email service
-│   │   ├── config/         # Database config
-│   │   └── app.js          # Main server file
-│   ├── database/
-│   │   └── schema.sql      # Database schema
-│   ├── uploads/            # File upload directory
-│   └── package.json
-├── frontend/
+taskMan-application/
+├── frontend/                 # Angular frontend application
 │   └── taskman-frontend/
 │       ├── src/
 │       │   ├── app/
-│       │   │   ├── components/  # Angular components
-│       │   │   ├── services/     # API services
-│       │   │   ├── models/      # TypeScript interfaces
-│       │   │   ├── guards/      # Route guards
-│       │   │   └── interceptors/ # HTTP interceptors
-│       │   └── styles.scss      # Global styles
-│       └── package.json
-└── README.md
+│       │   │   ├── components/    # UI components
+│       │   │   ├── guards/        # Route guards
+│       │   │   ├── interceptors/  # HTTP interceptors
+│       │   │   ├── models/        # TypeScript models
+│       │   │   └── services/     # Business logic services
+│       │   └── main.ts
+│       ├── package.json
+│       └── angular.json
+├── backend-dotnet/           # .NET Web API backend
+│   ├── Controllers/          # API controllers
+│   ├── Data/                 # Entity Framework DbContext
+│   ├── Models/               # Entity models
+│   ├── Services/             # Business logic services
+│   ├── DTOs/                 # Data transfer objects
+│   ├── Middleware/           # Custom middleware
+│   ├── Program.cs            # Application entry point
+│   └── TaskMan.Api.csproj    # Project file
+├── README.md                 # This file
+└── SETUP_GUIDE.md           # Detailed setup instructions
 ```
 
-## 🛠️ Setup Instructions
+## 🚀 Quick Start
 
 ### Prerequisites
-- Node.js 18+ and npm
-- MySQL 8.0+
-- Git
 
-### Backend Setup
+- **Node.js 18+** and npm
+- **.NET 8 SDK**
+- **Visual Studio Code** or **Visual Studio 2022**
 
-1. **Navigate to backend directory**:
-   ```bash
-   cd backend
-   ```
+### 1. Clone the Repository
 
-2. **Install dependencies**:
-   ```bash
-   npm install
-   ```
+```bash
+git clone <repository-url>
+cd taskMan-application
+```
 
-3. **Configure environment variables**:
-   ```bash
-   cp .env.example .env
-   ```
-   Edit `.env` with your configuration:
-   ```env
-   NODE_ENV=development
-   PORT=3000
-   FRONTEND_URL=http://localhost:4200
-   
-   # Database
-   DB_HOST=localhost
-   DB_USER=root
-   DB_PASSWORD=your_password
-   DB_NAME=taskman
-   
-   # JWT
-   JWT_SECRET=your-super-secret-jwt-key-change-this-in-production
-   JWT_EXPIRES_IN=7d
-   
-   # Email (Gmail SMTP)
-   EMAIL_HOST=smtp.gmail.com
-   EMAIL_PORT=587
-   EMAIL_USER=your-email@gmail.com
-   EMAIL_PASS=your-app-password
-   EMAIL_FROM=your-email@gmail.com
-   
-   # File upload
-   MAX_FILE_SIZE=10485760
-   MAX_FILES_PER_TASK=3
-   ```
+### 2. Backend Setup
 
-4. **Set up MySQL database**:
-   ```bash
-   mysql -u root -p < database/schema.sql
-   ```
+```bash
+cd backend-dotnet
+dotnet restore
+dotnet run
+```
 
-5. **Start the server**:
-   ```bash
-   npm run dev
-   ```
+The API will be available at:
+- **HTTPS**: `https://localhost:7000`
+- **HTTP**: `http://localhost:5000`
+- **Swagger UI**: `https://localhost:7000/swagger`
 
-### Frontend Setup
+### 3. Frontend Setup
 
-1. **Navigate to frontend directory**:
-   ```bash
-   cd frontend/taskman-frontend
-   ```
+```bash
+cd frontend/taskman-frontend
+npm install
+ng serve
+```
 
-2. **Install dependencies**:
-   ```bash
-   npm install
-   ```
+The frontend will be available at `http://localhost:4200`
 
-3. **Start the development server**:
-   ```bash
-   ng serve
-   ```
+### 4. Access the Application
 
-4. **Access the application**:
-   Open your browser and navigate to `http://localhost:4200`
+- **Frontend**: http://localhost:4200
+- **API Documentation**: https://localhost:7000/swagger
+- **Health Check**: https://localhost:7000/api/health
 
 ## 🔧 Configuration
 
-### Email Setup (Gmail)
-1. Enable 2-factor authentication on your Gmail account
-2. Generate an App Password:
-   - Go to Google Account settings
-   - Security → 2-Step Verification → App passwords
-   - Generate password for "Mail"
-3. Use the generated password in your `.env` file
+### Backend Configuration
 
-### Database Configuration
-The application uses MySQL with the following key tables:
-- `users`: User accounts and roles
-- `tasks`: Task information and status
-- `task_assignees`: Many-to-many relationship for task assignments
-- `task_attachments`: File attachments
-- `task_comments`: Task comments
+Update `backend-dotnet/appsettings.json`:
 
-## 📱 Usage
+```json
+{
+  "JwtSettings": {
+    "SecretKey": "YourSuperSecretKeyThatIsAtLeast32CharactersLong!"
+  },
+  "ConnectionStrings": {
+    "DefaultConnection": "Data Source=demo.db"
+  },
+  "FrontendUrl": "http://localhost:4200"
+}
+```
 
-### Getting Started
-1. **Register as Lead**: Create a new account with email verification
-2. **Verify Email**: Check your email for 6-digit OTP code
-3. **Login**: Access the dashboard after verification
-4. **Create Tasks**: Add tasks with descriptions, due dates, and assignees
-5. **Invite Members**: Send invitations to team members
-6. **Manage Tasks**: Update status, add comments, upload files
+### Frontend Configuration
 
-### Task Management
-- **Create Task**: Leads can create tasks with title, description, due date, project tag
-- **Assign Tasks**: Add multiple assignees to tasks
-- **Status Updates**: Follow the defined workflow for status changes
-- **File Attachments**: Upload relevant files (max 10MB, 3 files per task)
-- **Comments**: Add context and updates to tasks
+Update API base URL in `frontend/taskman-frontend/src/app/services/` if needed.
 
-### Export Features
-- **CSV Export**: Leads can export tasks and users data
-- **Filtered Export**: Export specific subsets based on filters
-- **Scheduled Reports**: Use export for regular reporting
+## 📊 Task Management Features
 
-## 🔒 Security Features
+### Task Status Workflow
+1. **Backlogged** → **Defined** (Lead only)
+2. **Defined** → **In Progress** (Member/Lead)
+3. **In Progress** → **Review** (Member/Lead)
+4. **Review** → **Completed** (Lead only)
 
-- **JWT Authentication**: Secure token-based authentication
-- **Email Verification**: 6-digit OTP for account verification
-- **Role-Based Access**: Strict permission controls
-- **Rate Limiting**: API rate limiting to prevent abuse
-- **Input Validation**: Server-side validation for all inputs
-- **File Upload Security**: File type and size restrictions
-- **CORS Protection**: Configured for specific origins
+### Role-Based Permissions
+- **Leads**: Can create, assign, complete, and delete tasks
+- **Members**: Can update task status (defined → in-progress → review)
+
+### File Attachments
+- Upload multiple files per task
+- File size limits and type validation
+- Secure file storage and retrieval
+
+### Comments System
+- Add comments to tasks
+- User attribution and timestamps
+- Real-time comment updates
+
+## 🔐 Authentication
+
+### User Registration
+- Email and password required
+- Role assignment (Lead/Member)
+- Auto-verification for demo purposes
+
+### Login Process
+1. Submit email and password
+2. Receive JWT token
+3. Token stored in browser localStorage
+4. Token included in API requests
+
+## 📈 Export Features
+
+### CSV Export
+- Export tasks with filters
+- Include assignees, comments, and attachments count
+- Formatted for Excel compatibility
+
+## 🛠️ Development
+
+### Backend Development
+```bash
+cd backend-dotnet
+dotnet watch run  # Hot reload enabled
+```
+
+### Frontend Development
+```bash
+cd frontend/taskman-frontend
+ng serve --watch  # Hot reload enabled
+```
+
+### Database Management
+- **Development**: SQLite database (auto-created)
+- **Production**: SQL Server database
+- **Migrations**: Entity Framework migrations
 
 ## 🚀 Deployment
 
-### Production Considerations
-1. **Environment Variables**: Update all production values
-2. **Database**: Use production MySQL instance
-3. **File Storage**: Consider cloud storage for uploads
-4. **Email Service**: Use production email service (SendGrid, etc.)
-5. **SSL**: Enable HTTPS for production
-6. **Monitoring**: Add logging and monitoring
-
-### Docker Deployment (Optional)
+### Backend Deployment
 ```bash
-# Build backend
-cd backend
-docker build -t taskman-backend .
-
-# Build frontend
-cd frontend/taskman-frontend
-docker build -t taskman-frontend .
-
-# Run with docker-compose
-docker-compose up -d
+cd backend-dotnet
+dotnet publish -c Release
+# Deploy the publish folder to your hosting platform
 ```
+
+### Frontend Deployment
+```bash
+cd frontend/taskman-frontend
+ng build --configuration production
+# Deploy the dist folder to your hosting platform
+```
+
+## 📝 API Documentation
+
+### Authentication Endpoints
+- `POST /api/auth/register` - Register new user
+- `POST /api/auth/login` - User login
+- `GET /api/auth/me` - Get current user
+
+### Task Endpoints
+- `GET /api/tasks` - Get all tasks
+- `POST /api/tasks` - Create task (Lead only)
+- `PATCH /api/tasks/{id}/status` - Update task status
+- `POST /api/tasks/{id}/attachments` - Upload attachments
+- `POST /api/tasks/{id}/comments` - Add comment
+
+### User Endpoints
+- `GET /api/users` - Get organization users
+- `GET /api/users/leads` - Get leads
+- `GET /api/users/members` - Get members
+
+### Export Endpoints
+- `GET /api/export/tasks/csv` - Export tasks to CSV
 
 ## 🧪 Testing
 
 ### Backend Testing
 ```bash
-cd backend
-npm test
+cd backend-dotnet
+dotnet test
 ```
 
 ### Frontend Testing
@@ -252,30 +237,11 @@ cd frontend/taskman-frontend
 ng test
 ```
 
-## 📊 API Documentation
+## 📚 Documentation
 
-### Authentication Endpoints
-- `POST /api/auth/register` - Register new lead
-- `POST /api/auth/verify` - Verify email with OTP
-- `POST /api/auth/login` - Login user
-- `GET /api/auth/me` - Get current user
-
-### Task Endpoints
-- `GET /api/tasks` - Get all tasks (with filters)
-- `POST /api/tasks` - Create task (Lead only)
-- `PATCH /api/tasks/:id/status` - Update task status
-- `POST /api/tasks/:id/assignees` - Add assignees
-- `POST /api/tasks/:id/attachments` - Upload files
-- `POST /api/tasks/:id/comments` - Add comment
-
-### User Management
-- `GET /api/users` - Get organization users
-- `POST /api/users/leads` - Create lead (Lead only)
-- `POST /api/users/members` - Create member (Lead only)
-
-### Export
-- `GET /api/export/tasks` - Export tasks to CSV
-- `GET /api/export/users` - Export users to CSV
+- [Setup Guide](SETUP_GUIDE.md) - Detailed setup instructions
+- [Backend Documentation](backend-dotnet/README.md) - Backend-specific documentation
+- [Frontend Documentation](frontend/taskman-frontend/README.md) - Frontend-specific documentation
 
 ## 🤝 Contributing
 
@@ -291,19 +257,17 @@ This project is licensed under the MIT License.
 
 ## 🆘 Support
 
-For support and questions:
-- Check the documentation
-- Review the API endpoints
-- Check the console for error messages
-- Ensure all environment variables are set correctly
+For issues and questions:
+1. Check the [Setup Guide](SETUP_GUIDE.md) for common issues
+2. Review the API documentation at `/swagger`
+3. Check the logs for error details
+4. Verify configuration settings
 
-## 🔄 Future Enhancements
+## 🔄 Recent Updates
 
-- Real-time notifications
-- Kanban board view
-- Advanced reporting
-- Mobile app
-- Integration with external tools
-- Advanced file management
-- Task templates
-- Time tracking
+- **Migrated from Node.js to .NET 8** for better performance and enterprise readiness
+- **Enhanced security** with built-in ASP.NET Core features
+- **Improved error handling** with global exception middleware
+- **Better documentation** with Swagger/OpenAPI integration
+- **Structured logging** with Serilog
+- **Rate limiting** for API protection
