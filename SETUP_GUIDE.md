@@ -83,13 +83,13 @@ Edit `backend-dotnet/appsettings.json`:
   },
   "ConnectionStrings": {
     "DefaultConnection": "Data Source=demo.db",
-    "SqlServerConnection": "Server=localhost;Database=taskman;User Id=sa;Password=YourPassword;TrustServerCertificate=true;"
+    "SqlServerConnection": "Server=localhost;Database=taskman;User Id=sa;Password=task123;TrustServerCertificate=true;"
   },
   "EmailSettings": {
     "SmtpServer": "smtp.gmail.com",
     "SmtpPort": 587,
-    "SmtpUsername": "your-email@gmail.com",
-    "SmtpPassword": "your-app-password",
+    "SmtpUsername": "vakv.3003@gmail.com",
+    "SmtpPassword": "@nil_Gmail606893",
     "FromEmail": "noreply@taskman.com",
     "FromName": "TaskMan"
   },
